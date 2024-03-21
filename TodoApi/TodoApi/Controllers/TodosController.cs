@@ -49,8 +49,6 @@ namespace TodoApi.Controllers
             return Ok(task);
         }
 
-        // Updating the order of 2 TodoTasks.
-
         [HttpPost]
         public IActionResult CreateTodo([FromBody] CreateTodoRequest request)
         {

@@ -10,6 +10,8 @@
 
         public bool Completed { get; }
 
+        public int OrderPosition { get; set; }
+
         // Enforce here...
         public TodoTask(
             Guid id,

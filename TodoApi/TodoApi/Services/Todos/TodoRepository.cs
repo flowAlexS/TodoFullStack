@@ -8,7 +8,10 @@ namespace TodoApi.Services.Todos
 
         // Initial implementation within memory...
         public void CreateTodo(TodoTask request)
-        => _context.Add(request.Id, request);
+        {
+            _context.Add(request.Id, request);
+            request.OrderPosition = _context.Count;
+        }
 
         public void DeleteTodo(Guid id)
         => _context.Remove(id);
@@ -20,6 +23,11 @@ namespace TodoApi.Services.Todos
         => _context.Values;
 
         public void UpdateTodo(Guid id, TodoTask request)
-        => _context[id] = request;
+        {
+            var original = _context[id];
+            request.OrderPosition = original.OrderPosition;
+
+            _context[id] = request;
+        }
     }
 }

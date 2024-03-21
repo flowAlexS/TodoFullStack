@@ -30,3 +30,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
+
+
+// TODO
+// Implement Ordering
+// Implement the treeLike struture + ordering...
+// Handle Errors 
