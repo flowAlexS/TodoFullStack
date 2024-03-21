@@ -19,7 +19,9 @@ namespace TodoApi.Controllers
         [HttpGet]
         public IActionResult GetTodos()
         {
-            return Ok();
+            var todos = _todoRepository.GetTodos();
+
+            return Ok(todos);
         }
 
         [HttpPut("{id:int}")]

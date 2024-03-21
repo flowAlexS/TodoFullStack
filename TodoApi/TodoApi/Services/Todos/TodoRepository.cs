@@ -10,5 +10,8 @@ namespace TodoApi.Services.Todos
         // Initial implementation within memory...
         public void CreateTodo(TodoTask request)
         => _context.Add(request.Id, request);
+
+        public ICollection<TodoTask> GetTodos()
+        => _context.Values;
     }
 }

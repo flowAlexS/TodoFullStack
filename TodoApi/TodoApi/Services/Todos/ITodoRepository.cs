@@ -6,5 +6,7 @@ namespace TodoApi.Services.Todos
     public interface ITodoRepository
     {
         void CreateTodo(TodoTask request);
+
+        ICollection<TodoTask> GetTodos();
     }
 }
