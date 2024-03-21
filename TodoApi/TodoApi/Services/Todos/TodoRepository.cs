@@ -13,6 +13,26 @@ namespace TodoApi.Services.Todos
             request.OrderPosition = _context.Count;
         }
 
+        public void CreateTodoChild(Guid parent, TodoTask request)
+        {
+            TodoTask parentTodo = null;
+
+            foreach (var item in _context.Values)
+            {
+                var node = this.GetNode(item, parent);
+                if (node is not null)
+                {
+                    parentTodo = node;
+                    break;
+                }
+            }
+
+            parentTodo.Children.Add(request);
+            request.OrderPosition = parentTodo.Children.Count;
+            request.ParentTodo = parentTodo;
+            request.ParentTodoId = parentTodo.Id;
+        }
+
         public void DeleteTodo(Guid id)
         => _context.Remove(id);
 
@@ -37,6 +57,26 @@ namespace TodoApi.Services.Todos
             request.OrderPosition = original.OrderPosition;
 
             _context[id] = request;
+        }
+
+        private TodoTask? GetNode(TodoTask root, Guid id)
+        {
+            if (root.Id.Equals(id))
+            {
+                return root;
+            }
+
+            foreach (var child in root.Children)
+            {
+                var task = GetNode(child, id);
+                if (task is not null)
+                {
+                    return task;
+                }
+
+            }
+
+            return null;
         }
     }
 }

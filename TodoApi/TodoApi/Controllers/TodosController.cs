@@ -70,6 +70,17 @@ namespace TodoApi.Controllers
             return Ok(todo);
         }
 
+        [HttpPost("{id:guid}")]
+        public IActionResult CreateTodoChild([FromRoute] Guid id, [FromBody] CreateTodoRequest request)
+        {
+            // Creates the TodoModel...
+            var todo = request.ToTodo();
+
+            _todoRepository.CreateTodoChild(id, todo);
+
+            return Ok();
+        }
+
         [HttpDelete("{id:guid}")]
         public IActionResult DeleteTodo([FromRoute] Guid id)
         {

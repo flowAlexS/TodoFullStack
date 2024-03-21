@@ -6,6 +6,8 @@ namespace TodoApi.Services.Todos
     {
         void CreateTodo(TodoTask request);
 
+        void CreateTodoChild(Guid parent, TodoTask request);
+
         void DeleteTodo(Guid id);
 
         TodoTask GetTodo(Guid id);

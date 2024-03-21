@@ -12,6 +12,14 @@
 
         public int OrderPosition { get; set; }
 
+        // Parent Reference
+        public Guid? ParentTodoId { get; set; }
+
+        public TodoTask? ParentTodo { get; set; }
+
+        // Collection of the children
+        public List<TodoTask> Children { get; set; } = new List<TodoTask>();
+
         // Enforce here...
         public TodoTask(
             Guid id,
