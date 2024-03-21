@@ -49,6 +49,8 @@ namespace TodoApi.Controllers
             return Ok(task);
         }
 
+        // Updating the order of 2 TodoTasks.
+
         [HttpPost]
         public IActionResult CreateTodo([FromBody] CreateTodoRequest request)
         {
@@ -65,8 +67,10 @@ namespace TodoApi.Controllers
         [HttpDelete("{id:guid}")]
         public IActionResult DeleteTodo([FromRoute] Guid id)
         {
+            // Deletes the Todo...
             _todoRepository.DeleteTodo(id);
 
+            // Returns status...
             return NoContent();
         }
     }
