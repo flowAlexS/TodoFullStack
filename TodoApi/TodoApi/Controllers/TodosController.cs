@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel;
-using TodoApi.Contracts.Todos;
+using TodoApi.DTOs.Todo;
+using TodoApi.Mappers.Todos;
 using TodoApi.Models.Todos;
 using TodoApi.Services.Todos;
 
@@ -33,30 +33,28 @@ namespace TodoApi.Controllers
         }
 
         [HttpPut("{id:Guid}")]
-        public IActionResult UpdateTodo([FromRoute] Guid id, [FromBody] TodoTask request)
+        public IActionResult UpdateTodo([FromRoute] Guid id, [FromBody] UpdateTodoRequest request)
         {
-            var task = new TodoTask(
-                id: id,
-                title: request.Title,
-                note: request.Note,
-                completed: request.Completed);
+            // Creates the object...
+            var task = request.ToTodo(id);
 
+            // Updates the object in the db Context..
             _todoRepository.UpdateTodo(id, task);
 
+            // Return the result..
             return Ok(task);
         }
 
         [HttpPost]
         public IActionResult CreateTodo([FromBody] CreateTodoRequest request)
         {
-            var todo = new TodoTask(
-                id: Guid.NewGuid(),
-                title: request.Title,
-                note: request.Note,
-                completed: request.Completed);
+            // Creates the TodoModel...
+            var todo = request.ToTodo();
 
+            // Save in the Db...
             _todoRepository.CreateTodo(todo);
 
+            // Return status...
             return Ok(todo);
         }
 
