@@ -36,7 +36,7 @@ namespace TodoApi.Controllers
             return Ok(todo);
         }
 
-        [HttpPut("{id:Guid}")]
+        [HttpPut("/{id:Guid}")]
         public IActionResult UpdateTodo([FromRoute] Guid id, [FromBody] UpdateTodoRequest request)
         {
             // Creates the object...
@@ -47,6 +47,14 @@ namespace TodoApi.Controllers
 
             // Return the result..
             return Ok(task);
+        }
+
+        [HttpPut("/swap/{id:Guid}")]
+        public IActionResult UpdateTodo([FromRoute] Guid id, [FromBody] Guid swapId)
+        {
+            _todoRepository.SwapTodos(id, swapId);
+
+            return Ok();
         }
 
         [HttpPost]
