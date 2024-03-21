@@ -9,7 +9,7 @@ namespace TodoApi.Controllers
     [Route("[controller]")]
     public class TodosController : ControllerBase
     {
-        private ITodoRepository _todoRepository;
+        private readonly ITodoRepository _todoRepository;
 
         public TodosController(ITodoRepository todoRepository)
         {
@@ -19,16 +19,20 @@ namespace TodoApi.Controllers
         [HttpGet]
         public IActionResult GetTodos()
         {
+            // Gets All the Todos...
             var todos = _todoRepository.GetTodos();
 
+            // Returns the result...
             return Ok(todos);
         }
 
         [HttpGet("{id:Guid}")]
         public IActionResult GetTodo([FromRoute] Guid id)
         {
+            // Gets the Todo
             var todo = _todoRepository.GetTodo(id);
 
+            // Returns the result...
             return Ok(todo);
         }
 

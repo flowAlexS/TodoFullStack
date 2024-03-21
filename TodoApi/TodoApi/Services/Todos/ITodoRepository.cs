@@ -1,5 +1,4 @@
-﻿using TodoApi.Contracts.Todos;
-using TodoApi.Models.Todos;
+﻿using TodoApi.Models.Todos;
 
 namespace TodoApi.Services.Todos
 {

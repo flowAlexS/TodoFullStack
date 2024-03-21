@@ -6,6 +6,6 @@
 
         public string Note { get; set; } = string.Empty;
 
-        public bool Completed { get; set; } = string.Empty;
+        public bool Completed { get; set; }
     }
 }
