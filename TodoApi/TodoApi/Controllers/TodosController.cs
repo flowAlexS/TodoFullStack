@@ -24,10 +24,26 @@ namespace TodoApi.Controllers
             return Ok(todos);
         }
 
-        [HttpPut("{id:int}")]
-        public IActionResult UpdateTodo([FromRoute] int id, [FromBody] TodoTask task)
+        [HttpGet("{id:Guid}")]
+        public IActionResult GetTodo([FromRoute] Guid id)
         {
-            return Ok();
+            var todo = _todoRepository.GetTodo(id);
+
+            return Ok(todo);
+        }
+
+        [HttpPut("{id:Guid}")]
+        public IActionResult UpdateTodo([FromRoute] Guid id, [FromBody] TodoTask request)
+        {
+            var task = new TodoTask(
+                id: id,
+                title: request.Title,
+                note: request.Note,
+                completed: request.Completed);
+
+            _todoRepository.UpdateTodo(id, task);
+
+            return Ok(task);
         }
 
         [HttpPost]
@@ -44,9 +60,11 @@ namespace TodoApi.Controllers
             return Ok(todo);
         }
 
-        [HttpDelete("{id:int}")]
-        public IActionResult DeleteTodo([FromRoute] int id)
+        [HttpDelete("{id:guid}")]
+        public IActionResult DeleteTodo([FromRoute] Guid id)
         {
+            _todoRepository.DeleteTodo(id);
+
             return NoContent();
         }
     }

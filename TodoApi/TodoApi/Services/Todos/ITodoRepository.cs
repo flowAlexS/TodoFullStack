@@ -7,6 +7,12 @@ namespace TodoApi.Services.Todos
     {
         void CreateTodo(TodoTask request);
 
+        void DeleteTodo(Guid id);
+
+        TodoTask GetTodo(Guid id);
+
         ICollection<TodoTask> GetTodos();
+
+        void UpdateTodo(Guid id, TodoTask request);
     }
 }
