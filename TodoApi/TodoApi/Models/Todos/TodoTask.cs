@@ -10,20 +10,17 @@
 
         public bool Completed { get; }
 
-        public int Order { get; }
-
         // Enforce here...
         public TodoTask(
             Guid id,
             string title,
             string note,
-            int order)
+            bool completed)
         {
             Id = id;
             Title = title;
             Note = note;
-            Completed = false;
-            Order = order;
+            Completed = completed;
         }
     }
 }

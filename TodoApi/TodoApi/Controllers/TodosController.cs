@@ -1,11 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
+using TodoApi.Contracts.Todos;
 using TodoApi.Models.Todos;
+using TodoApi.Services.Todos;
 
 namespace TodoApi.Controllers
 {
     [Route("[controller]")]
     public class TodosController : ControllerBase
     {
+        private ITodoRepository _todoRepository;
+
+        public TodosController(ITodoRepository todoRepository)
+        {
+            _todoRepository = todoRepository;
+        }
+
         [HttpGet]
         public IActionResult GetTodos()
         {
@@ -19,9 +29,17 @@ namespace TodoApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTodo(TodoTask task)
+        public IActionResult CreateTodo([FromBody] CreateTodoRequest request)
         {
-            return Ok();
+            var todo = new TodoTask(
+                id: Guid.NewGuid(),
+                title: request.Title,
+                note: request.Note,
+                completed: request.Completed);
+
+            _todoRepository.CreateTodo(todo);
+
+            return Ok(todo);
         }
 
         [HttpDelete("{id:int}")]
