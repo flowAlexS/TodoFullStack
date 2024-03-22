@@ -8,6 +8,8 @@
 
         public string Note { get; set; } = string.Empty;
 
+        public int OrderPosition { get; set; }
+
         public bool Completed { get; set; }
     }
 }

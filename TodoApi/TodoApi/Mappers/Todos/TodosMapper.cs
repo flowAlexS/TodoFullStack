@@ -17,6 +17,7 @@ namespace TodoApi.Mappers.Todos
                 Title = task.Title,
                 Note = task.Note,
                 Completed = task.Completed,
+                OrderPosition = task.OrderPosition,
                 Children = subtasks,
             };
         }
@@ -27,6 +28,7 @@ namespace TodoApi.Mappers.Todos
             Id = task.Id,
             Title = task.Title,
             Note = task.Note,
+            OrderPosition = task.OrderPosition,
             Completed = task.Completed
         };
 
@@ -36,6 +38,7 @@ namespace TodoApi.Mappers.Todos
             Id = task.Id,
             Title = task.Title,
             Note = task.Note,
+            OrderPosition = task.OrderPosition,
             Completed = task.Completed
         };
     }

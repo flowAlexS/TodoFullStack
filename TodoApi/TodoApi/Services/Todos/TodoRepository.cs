@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 using TodoApi.Data;
 using TodoApi.DTOs.Todo;
+using TodoApi.Extensions.Todos;
 using TodoApi.Mappers.Todos;
 using TodoApi.Models.Todos;
 
@@ -83,9 +85,24 @@ namespace TodoApi.Services.Todos
             return result;
         }
 
-        public void SwapTodos(Guid id, Guid swapId)
+        public bool SwapTodos(SwapTodosRequest request)
         {
-            throw new NotImplementedException();
+            var todo1 = _context.Todos.FirstOrDefault(todo => todo.Id.Equals(request.FirstTodo));
+            var todo2 = _context.Todos.FirstOrDefault(todo => todo.Id.Equals(request.SecondTodo));
+
+            if (todo1 is null || todo2 is null)
+            {
+                return false;
+            }
+
+            if (todo1.GetLevel() != todo2.GetLevel())
+            {
+                return false;
+            }
+
+            (todo1.OrderPosition, todo2.OrderPosition) = (todo2.OrderPosition, todo1.OrderPosition);
+            _context.SaveChanges();
+            return true;
         }
 
         public TodoTask? UpdateTodo(Guid id, UpdateTodoRequest request)

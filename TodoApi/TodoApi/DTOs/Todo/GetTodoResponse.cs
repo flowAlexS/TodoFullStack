@@ -10,6 +10,8 @@
 
         public bool Completed { get; set; }
 
+        public int OrderPosition { get; set; }
+
         public List<GetTodoResponse> Children { get; set; } = new List<GetTodoResponse>();
     }
 }

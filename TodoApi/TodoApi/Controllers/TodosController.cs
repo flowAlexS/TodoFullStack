@@ -41,10 +41,14 @@ namespace TodoApi.Controllers
                 : Ok(todo.ToUpdateResponse());
         }
 
-        [HttpPut("/swap/{id:Guid}")]
-        public IActionResult UpdateTodo([FromRoute] Guid id, [FromBody] Guid swapId)
+        [HttpPost("/swap")]
+        public IActionResult SwapTodos([FromBody] SwapTodosRequest request)
         {
-            throw new NotImplementedException();
+            var result = _todoRepository.SwapTodos(request);
+
+            return result
+                ? Ok()
+                : NotFound();
         }
 
         // Both creates look similar.. So I could put them togheter...
