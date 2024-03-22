@@ -1,10 +1,11 @@
-﻿using TodoApi.Models.Todos;
+﻿using TodoApi.DTOs.Todo;
+using TodoApi.Models.Todos;
 
 namespace TodoApi.Services.Todos
 {
     public interface ITodoRepository
     {
-        void CreateTodo(TodoTask request);
+        TodoTask? CreateTodo(CreateTodoRequest request);
 
         void CreateTodoChild(Guid parent, TodoTask request);
 

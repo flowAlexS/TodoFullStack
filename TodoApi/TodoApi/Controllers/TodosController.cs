@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TodoApi.DTOs.Todo;
 using TodoApi.Models.Todos;
 using TodoApi.Services.Todos;
 
@@ -17,6 +18,7 @@ namespace TodoApi.Controllers
         [HttpGet]
         public IActionResult GetTodos()
         {
+            // Will need some proper fixes..
             throw new NotImplementedException();
         }
 
@@ -40,9 +42,19 @@ namespace TodoApi.Controllers
 
         // Both creates look similar.. So I could put them togheter...
         [HttpPost]
-        public IActionResult CreateTodo([FromBody] TodoTask request)
+        public IActionResult CreateTodo([FromBody] CreateTodoRequest request)
         {
-            throw new NotImplementedException();
+            var task = _todoRepository.CreateTodo(request);
+
+            if (task is null)
+            {
+                return NotFound();
+            }
+
+            return CreatedAtAction(
+                nameof(GetTodo),
+                new { Id = task.Id },
+                task);
         }
 
         [HttpDelete("{id:guid}")]
