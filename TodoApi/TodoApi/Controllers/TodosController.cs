@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TodoApi.DTOs.Todo;
 using TodoApi.Mappers.Todos;
-using TodoApi.Models.Todos;
 using TodoApi.Services.Todos;
 
 namespace TodoApi.Controllers
