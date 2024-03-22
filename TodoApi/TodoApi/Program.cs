@@ -37,6 +37,5 @@ app.Run();
 
 
 // TODO
-// Implement Ordering
-// Implement the treeLike struture + ordering...
 // Handle Errors 
+// Make everything async..
