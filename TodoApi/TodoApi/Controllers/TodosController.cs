@@ -23,7 +23,7 @@ namespace TodoApi.Controllers
             var todos = _todoRepository.GetTodos();
 
             // Returns the result...
-            return Ok(todos);
+            return Ok(todos.Select(x => x.ToResponse()).ToList());
         }
 
         [HttpGet("{id:Guid}")]
@@ -67,6 +67,7 @@ namespace TodoApi.Controllers
             _todoRepository.CreateTodo(todo);
 
             // Return status...
+            // Retur createTodoResponse
             return Ok(todo);
         }
 
