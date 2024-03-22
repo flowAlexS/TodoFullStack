@@ -24,7 +24,11 @@ namespace TodoApi.Controllers
         [HttpGet("{id:Guid}")]
         public IActionResult GetTodo([FromRoute] Guid id)
         {
-            throw new NotImplementedException();
+            var todo = _todoRepository.GetTodo(id);
+
+            return todo is null
+                ? NotFound()
+                : Ok(todo);
         }
 
         [HttpPut("/{id:Guid}")]
@@ -52,7 +56,7 @@ namespace TodoApi.Controllers
 
             return CreatedAtAction(
                 nameof(GetTodo),
-                new { Id = task.Id },
+                new { task.Id },
                 task);
         }
 

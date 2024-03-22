@@ -11,7 +11,7 @@ namespace TodoApi.Services.Todos
 
         void DeleteTodo(Guid id);
 
-        TodoTask GetTodo(Guid id);
+        GetTodoResponse? GetTodo(Guid id);
 
         ICollection<GetTodoResponse> GetTodos();
 

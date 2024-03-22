@@ -15,6 +15,7 @@ namespace TodoApi.Services.Todos
         // Change this later for error handling...
         public TodoTask? CreateTodo(CreateTodoRequest request)
         {
+            var todos = _context.Todos.ToList();
             // Also create the order position too..
 
             var task = new TodoTask()
@@ -22,12 +23,13 @@ namespace TodoApi.Services.Todos
                 Id = Guid.NewGuid(),
                 Title = request.Title,
                 Note = request.Note,
-                Completed = request.Completed
+                Completed = request.Completed,
+                OrderPosition = todos.Where(todo => todo.ParentTodo is null).Count() + 1,
             };
 
             if (request.ParentId is not null)
             {
-                var parent = _context.Todos.FirstOrDefault(todo => todo.Id.Equals(request.ParentId));
+                var parent = todos.FirstOrDefault(todo => todo.Id.Equals(request.ParentId));
 
                 if (parent is null)
                 {
@@ -36,6 +38,7 @@ namespace TodoApi.Services.Todos
                 
                 task.ParentTodo = parent;
                 task.ParentTodoId = parent.Id;
+                task.OrderPosition = todos.Where(todo => todo.ParentTodo?.Equals(parent) == true).Count() + 1;
             }
 
             _context.Todos.Add(task);
@@ -55,9 +58,12 @@ namespace TodoApi.Services.Todos
             throw new NotImplementedException();
         }
 
-        public TodoTask GetTodo(Guid id)
+        public GetTodoResponse? GetTodo(Guid id)
         {
-            throw new NotImplementedException();
+            var todos = _context.Todos.ToList();
+            var todo = todos.FirstOrDefault(todo => todo.Id.Equals(id));
+
+            return todo?.ToGetResponse(todos);
         }
 
         public ICollection<GetTodoResponse> GetTodos()
