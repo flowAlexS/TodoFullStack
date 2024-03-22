@@ -13,7 +13,7 @@ namespace TodoApi.Services.Todos
 
         TodoTask GetTodo(Guid id);
 
-        ICollection<TodoTask> GetTodos();
+        ICollection<GetTodoResponse> GetTodos();
 
         void UpdateTodo(Guid id, TodoTask request);
 

@@ -1,5 +1,6 @@
 ﻿using TodoApi.Data;
 using TodoApi.DTOs.Todo;
+using TodoApi.Mappers.Todos;
 using TodoApi.Models.Todos;
 
 namespace TodoApi.Services.Todos
@@ -14,6 +15,8 @@ namespace TodoApi.Services.Todos
         // Change this later for error handling...
         public TodoTask? CreateTodo(CreateTodoRequest request)
         {
+            // Also create the order position too..
+
             var task = new TodoTask()
             {
                 Id = Guid.NewGuid(),
@@ -41,6 +44,7 @@ namespace TodoApi.Services.Todos
             return task;
         }
 
+        // Remove this...
         public void CreateTodoChild(Guid parent, TodoTask request)
         {
             throw new NotImplementedException();
@@ -56,9 +60,15 @@ namespace TodoApi.Services.Todos
             throw new NotImplementedException();
         }
 
-        public ICollection<TodoTask> GetTodos()
+        public ICollection<GetTodoResponse> GetTodos()
         {
-            throw new NotImplementedException();
+            var todos = _context.Todos.ToList();
+
+            var parents = todos.Where(t => t.ParentTodo is null);
+
+            var result = parents.Select(parent => parent.ToGetResponse(todos)).ToList();
+
+            return result;
         }
 
         public void SwapTodos(Guid id, Guid swapId)

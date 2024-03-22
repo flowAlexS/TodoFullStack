@@ -18,8 +18,7 @@ namespace TodoApi.Controllers
         [HttpGet]
         public IActionResult GetTodos()
         {
-            // Will need some proper fixes..
-            throw new NotImplementedException();
+            return Ok(_todoRepository.GetTodos());
         }
 
         [HttpGet("{id:Guid}")]
