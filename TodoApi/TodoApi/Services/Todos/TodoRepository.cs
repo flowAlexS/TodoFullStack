@@ -48,12 +48,6 @@ namespace TodoApi.Services.Todos
             return task;
         }
 
-        // Remove this...
-        public void CreateTodoChild(Guid parent, TodoTask request)
-        {
-            throw new NotImplementedException();
-        }
-
         public void DeleteTodo(Guid id)
         {
             var todos = _context.Todos.ToList();
