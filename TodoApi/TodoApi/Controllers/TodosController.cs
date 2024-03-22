@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TodoApi.DTOs.Todo;
 using TodoApi.Mappers.Todos;
-using TodoApi.Models.Todos;
 using TodoApi.Services.Todos;
 
 namespace TodoApi.Controllers
@@ -33,7 +32,7 @@ namespace TodoApi.Controllers
             var todo = _todoRepository.GetTodo(id);
 
             // Returns the result...
-            return Ok(todo);
+            return Ok(todo.ToResponse());
         }
 
         [HttpPut("/{id:Guid}")]
@@ -57,6 +56,7 @@ namespace TodoApi.Controllers
             return Ok();
         }
 
+        // Both creates look similar.. So I could put them togheter...
         [HttpPost]
         public IActionResult CreateTodo([FromBody] CreateTodoRequest request)
         {

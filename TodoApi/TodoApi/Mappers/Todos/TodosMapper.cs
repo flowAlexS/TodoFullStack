@@ -19,8 +19,8 @@ namespace TodoApi.Mappers.Todos
             note: request.Note,
             completed: request.Completed);
 
-        public static CreateTodoResponse ToResponse(this TodoTask task)
-        => new CreateTodoResponse()
+        public static GetTodoResponse ToResponse(this TodoTask task)
+        => new GetTodoResponse()
         {
             Id = task.Id,
             Title = task.Title,
