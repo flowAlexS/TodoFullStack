@@ -1,4 +1,5 @@
-﻿using TodoApi.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TodoApi.Data;
 using TodoApi.DTOs.Todo;
 using TodoApi.Mappers.Todos;
 using TodoApi.Models.Todos;
@@ -55,7 +56,18 @@ namespace TodoApi.Services.Todos
 
         public void DeleteTodo(Guid id)
         {
-            throw new NotImplementedException();
+            var todos = _context.Todos.ToList();
+            var todo = todos.FirstOrDefault(todo => todo.Id == id);
+
+            if (todo is null)
+            {
+                return;
+            }
+
+            RemoveChildren(todo);
+
+            _context.Todos.Remove(todo);
+            _context.SaveChanges();
         }
 
         public GetTodoResponse? GetTodo(Guid id)
@@ -99,6 +111,18 @@ namespace TodoApi.Services.Todos
 
             this._context.SaveChanges();
             return todo;
+        }
+
+        private void RemoveChildren(TodoTask todo)
+        {
+            var children = _context.Todos.Where(t => t.ParentTodoId.Equals(todo.Id)).ToList();
+
+            foreach (var child in children)
+            {
+                RemoveChildren(child);
+
+                _context.Todos.Remove(child);
+            }
         }
     }
 }

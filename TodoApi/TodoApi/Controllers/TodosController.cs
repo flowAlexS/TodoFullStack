@@ -67,7 +67,9 @@ namespace TodoApi.Controllers
         [HttpDelete("{id:guid}")]
         public IActionResult DeleteTodo([FromRoute] Guid id)
         {
-            throw new NotImplementedException();
+            _todoRepository.DeleteTodo(id);
+
+            return NoContent();
         }
     }
 }
