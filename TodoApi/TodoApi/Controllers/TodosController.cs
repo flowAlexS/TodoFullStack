@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TodoApi.DTOs.Todo;
-using TodoApi.Mappers.Todos;
+using TodoApi.Models.Todos;
 using TodoApi.Services.Todos;
 
 namespace TodoApi.Controllers
@@ -18,78 +17,38 @@ namespace TodoApi.Controllers
         [HttpGet]
         public IActionResult GetTodos()
         {
-            // Gets All the Todos...
-            var todos = _todoRepository.GetTodos();
-
-            // Returns the result...
-            return Ok(todos.Select(x => x.ToResponse()).ToList());
+            throw new NotImplementedException();
         }
 
         [HttpGet("{id:Guid}")]
         public IActionResult GetTodo([FromRoute] Guid id)
         {
-            // Gets the Todo
-            var todo = _todoRepository.GetTodo(id);
-
-            // Returns the result...
-            return Ok(todo.ToResponse());
+            throw new NotImplementedException();
         }
 
         [HttpPut("/{id:Guid}")]
-        public IActionResult UpdateTodo([FromRoute] Guid id, [FromBody] UpdateTodoRequest request)
+        public IActionResult UpdateTodo([FromRoute] Guid id, [FromBody] TodoTask request)
         {
-            // Creates the object...
-            var task = request.ToTodo(id);
-
-            // Updates the object in the db Context..
-            _todoRepository.UpdateTodo(id, task);
-
-            // Return the result..
-            return Ok(task);
+            throw new NotImplementedException();
         }
 
         [HttpPut("/swap/{id:Guid}")]
         public IActionResult UpdateTodo([FromRoute] Guid id, [FromBody] Guid swapId)
         {
-            _todoRepository.SwapTodos(id, swapId);
-
-            return Ok();
+            throw new NotImplementedException();
         }
 
         // Both creates look similar.. So I could put them togheter...
         [HttpPost]
-        public IActionResult CreateTodo([FromBody] CreateTodoRequest request)
+        public IActionResult CreateTodo([FromBody] TodoTask request)
         {
-            // Creates the TodoModel...
-            var todo = request.ToTodo();
-
-            // Save in the Db...
-            _todoRepository.CreateTodo(todo);
-
-            // Return status...
-            // Retur createTodoResponse
-            return Ok(todo);
-        }
-
-        [HttpPost("{id:guid}")]
-        public IActionResult CreateTodoChild([FromRoute] Guid id, [FromBody] CreateTodoRequest request)
-        {
-            // Creates the TodoModel...
-            var todo = request.ToTodo();
-
-            _todoRepository.CreateTodoChild(id, todo);
-
-            return Ok();
+            throw new NotImplementedException();
         }
 
         [HttpDelete("{id:guid}")]
         public IActionResult DeleteTodo([FromRoute] Guid id)
         {
-            // Deletes the Todo...
-            _todoRepository.DeleteTodo(id);
-
-            // Returns status...
-            return NoContent();
+            throw new NotImplementedException();
         }
     }
 }
