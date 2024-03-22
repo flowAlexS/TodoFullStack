@@ -15,7 +15,7 @@ namespace TodoApi.Services.Todos
 
         ICollection<GetTodoResponse> GetTodos();
 
-        void UpdateTodo(Guid id, TodoTask request);
+        TodoTask? UpdateTodo(Guid id, UpdateTodoRequest request);
 
         void SwapTodos(Guid id, Guid swapId);
     }

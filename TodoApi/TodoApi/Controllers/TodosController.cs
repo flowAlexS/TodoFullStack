@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TodoApi.DTOs.Todo;
+using TodoApi.Mappers.Todos;
 using TodoApi.Models.Todos;
 using TodoApi.Services.Todos;
 
@@ -32,9 +33,13 @@ namespace TodoApi.Controllers
         }
 
         [HttpPut("/{id:Guid}")]
-        public IActionResult UpdateTodo([FromRoute] Guid id, [FromBody] TodoTask request)
+        public IActionResult UpdateTodo([FromRoute] Guid id, [FromBody] UpdateTodoRequest request)
         {
-            throw new NotImplementedException();
+            var todo = _todoRepository.UpdateTodo(id, request);
+
+            return todo is null
+                ? NotFound()
+                : Ok(todo.ToUpdateResponse());
         }
 
         [HttpPut("/swap/{id:Guid}")]
@@ -57,7 +62,7 @@ namespace TodoApi.Controllers
             return CreatedAtAction(
                 nameof(GetTodo),
                 new { task.Id },
-                task);
+                task.ToCreateResponse());
         }
 
         [HttpDelete("{id:guid}")]

@@ -20,5 +20,23 @@ namespace TodoApi.Mappers.Todos
                 Children = subtasks,
             };
         }
+
+        public static CreateTodoResponse ToCreateResponse(this TodoTask task)
+        => new CreateTodoResponse()
+        {
+            Id = task.Id,
+            Title = task.Title,
+            Note = task.Note,
+            Completed = task.Completed
+        };
+
+        public static UpdateTodoResponse ToUpdateResponse(this TodoTask task)
+        => new UpdateTodoResponse()
+        {
+            Id = task.Id,
+            Title = task.Title,
+            Note = task.Note,
+            Completed = task.Completed
+        };
     }
 }

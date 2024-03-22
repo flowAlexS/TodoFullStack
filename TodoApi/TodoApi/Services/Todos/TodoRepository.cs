@@ -82,9 +82,23 @@ namespace TodoApi.Services.Todos
             throw new NotImplementedException();
         }
 
-        public void UpdateTodo(Guid id, TodoTask request)
+        public TodoTask? UpdateTodo(Guid id, UpdateTodoRequest request)
         {
-            throw new NotImplementedException();
+            var todos = _context.Todos;
+
+            var todo = todos.FirstOrDefault(t => t.Id.Equals(id));
+
+            if (todo is null)
+            {
+                return null;
+            }
+
+            todo.Title = request.Title;
+            todo.Note = request.Note;
+            todo.Completed = request.Completed;
+
+            this._context.SaveChanges();
+            return todo;
         }
     }
 }
