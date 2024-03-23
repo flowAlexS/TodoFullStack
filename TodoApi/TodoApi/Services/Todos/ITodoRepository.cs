@@ -9,9 +9,9 @@ namespace TodoApi.Services.Todos
 
         void DeleteTodo(Guid id);
 
-        GetTodoResponse? GetTodo(Guid id);
+        Task<GetTodoResponse?> GetTodo(Guid id);
 
-        ICollection<GetTodoResponse> GetTodos();
+        Task<ICollection<GetTodoResponse>> GetTodos();
 
         TodoTask? UpdateTodo(Guid id, UpdateTodoRequest request);
 

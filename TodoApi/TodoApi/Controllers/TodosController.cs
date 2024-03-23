@@ -16,15 +16,13 @@ namespace TodoApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetTodos()
-        {
-            return Ok(_todoRepository.GetTodos());
-        }
+        public async Task<IActionResult> GetTodos()
+        => Ok(await _todoRepository.GetTodos());
 
         [HttpGet("{id:Guid}")]
-        public IActionResult GetTodo([FromRoute] Guid id)
+        public async Task<IActionResult> GetTodo([FromRoute] Guid id)
         {
-            var todo = _todoRepository.GetTodo(id);
+            var todo = await _todoRepository.GetTodo(id);
 
             return todo is null
                 ? NotFound()

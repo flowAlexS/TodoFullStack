@@ -66,17 +66,17 @@ namespace TodoApi.Services.Todos
             _context.SaveChanges();
         }
 
-        public GetTodoResponse? GetTodo(Guid id)
+        public async Task<GetTodoResponse?> GetTodo(Guid id)
         {
-            var todos = _context.Todos.ToList();
-            var todo = todos.FirstOrDefault(todo => todo.Id.Equals(id));
+            var todos = await _context.Todos.ToListAsync();
+            var todo = todos.FirstOrDefault(t => t.Id.Equals(id));
 
             return todo?.ToGetResponse(todos);
         }
 
-        public ICollection<GetTodoResponse> GetTodos()
+        public async Task<ICollection<GetTodoResponse>> GetTodos()
         {
-            var todos = _context.Todos.ToList();
+            var todos = await _context.Todos.ToListAsync();
 
             var parents = todos.Where(t => t.ParentTodo is null);
 
