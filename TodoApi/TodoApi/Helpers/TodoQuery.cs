@@ -9,8 +9,10 @@
 
         public bool? Completed { get; set; } = null;
 
-        // Sort
+        // Sort Name/Title/Order
+        public string SortBy { get; set; } = string.Empty;
 
-        // Pagination
+        public bool Descending { get; set; } = false;
+
     }
 }

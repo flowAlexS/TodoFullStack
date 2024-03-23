@@ -1,4 +1,5 @@
-﻿using TodoApi.DTOs.Todo;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using TodoApi.DTOs.Todo;
 using TodoApi.Models.Todos;
 
 namespace TodoApi.Mappers.Todos
@@ -89,6 +90,15 @@ namespace TodoApi.Mappers.Todos
 
             // If neither the current node nor any child matches, return null
             return null;
+        }
+
+        public static void SortBy(this GetTodoResponse todoResponse, Func<GetTodoResponse, dynamic> keySelector)
+        {
+            todoResponse.Children = todoResponse.Children.OrderBy(keySelector).ToList();
+            foreach (var child in todoResponse.Children)
+            {
+                child.SortBy(keySelector);
+            }
         }
     }
 }

@@ -93,7 +93,18 @@ namespace TodoApi.Services.Todos
                 (string.IsNullOrEmpty(query.Note) || child.Note.ToLower().Contains(query.Note.ToLower())) &&
                 (query.Completed is null || child.Completed.Equals(query.Completed)));
 
-            // Make paginations..
+            // Sort
+            todoResponse.SortBy(x =>
+            {
+                if (query.SortBy.ToLower().Equals("title"))
+                {
+                    return x.Title;
+                }
+
+                return query.SortBy.ToLower().Equals("note")
+                ? x.Note
+                : x.OrderPosition;
+            });
 
             // return only the children that match the filters.
 
