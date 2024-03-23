@@ -92,12 +92,15 @@ namespace TodoApi.Mappers.Todos
             return null;
         }
 
-        public static void SortBy(this GetTodoResponse todoResponse, Func<GetTodoResponse, dynamic> keySelector)
+        public static void SortBy(this GetTodoResponse todoResponse, Func<GetTodoResponse, dynamic> keySelector, bool descending)
         {
-            todoResponse.Children = todoResponse.Children.OrderBy(keySelector).ToList();
+            todoResponse.Children = descending
+                ? todoResponse.Children.OrderByDescending(keySelector).ToList()
+                : todoResponse.Children.OrderBy(keySelector).ToList();
+
             foreach (var child in todoResponse.Children)
             {
-                child.SortBy(keySelector);
+                child.SortBy(keySelector, descending);
             }
         }
     }

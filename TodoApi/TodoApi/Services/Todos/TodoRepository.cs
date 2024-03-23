@@ -104,7 +104,7 @@ namespace TodoApi.Services.Todos
                 return query.SortBy.ToLower().Equals("note")
                 ? x.Note
                 : x.OrderPosition;
-            });
+            }, query.Descending);
 
             // return only the children that match the filters.
 
