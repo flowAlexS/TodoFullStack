@@ -16,9 +16,9 @@ namespace TodoApi.Services.Todos
         => _context = context;
             
         // Change this later for error handling...
-        public TodoTask? CreateTodo(CreateTodoRequest request)
+        public async Task<TodoTask?> CreateTodoAsync(CreateTodoRequest request)
         {
-            var todos = _context.Todos.ToList();
+            var todos = await _context.Todos.ToListAsync();
             // Also create the order position too..
 
             var task = new TodoTask()
@@ -27,7 +27,11 @@ namespace TodoApi.Services.Todos
                 Title = request.Title,
                 Note = request.Note,
                 Completed = request.Completed,
-                OrderPosition = todos.Where(todo => todo.ParentTodo is null).Count() + 1,
+                OrderPosition = todos
+                    .Where(todo => todo.ParentTodo is null)
+                    .Select(t => t.OrderPosition)
+                    .DefaultIfEmpty(0)
+                    .Max() + 1,
             };
 
             if (request.ParentId is not null)
@@ -41,18 +45,22 @@ namespace TodoApi.Services.Todos
                 
                 task.ParentTodo = parent;
                 task.ParentTodoId = parent.Id;
-                task.OrderPosition = todos.Where(todo => todo.ParentTodo?.Equals(parent) == true).Count() + 1;
+                task.OrderPosition = todos
+                    .Where(todo => todo.ParentTodo?.Equals(parent) == true)
+                    .Select(t => t.OrderPosition)
+                    .DefaultIfEmpty(0)
+                    .Max() + 1;
             }
 
-            _context.Todos.Add(task);
-            _context.SaveChanges();
+            await _context.Todos.AddAsync(task);
+            await _context.SaveChangesAsync();
 
             return task;
         }
 
-        public void DeleteTodo(Guid id)
+        public async Task DeleteTodoAsync(Guid id)
         {
-            var todos = _context.Todos.ToList();
+            var todos = await _context.Todos.ToListAsync();
             var todo = todos.FirstOrDefault(todo => todo.Id == id);
 
             if (todo is null)
@@ -63,10 +71,10 @@ namespace TodoApi.Services.Todos
             RemoveChildren(todo);
 
             _context.Todos.Remove(todo);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<GetTodoResponse?> GetTodo(Guid id)
+        public async Task<GetTodoResponse?> GetTodoAsync(Guid id)
         {
             var todos = await _context.Todos.ToListAsync();
             var todo = todos.FirstOrDefault(t => t.Id.Equals(id));
@@ -74,7 +82,7 @@ namespace TodoApi.Services.Todos
             return todo?.ToGetResponse(todos);
         }
 
-        public async Task<ICollection<GetTodoResponse>> GetTodos()
+        public async Task<ICollection<GetTodoResponse>> GetTodosAsync()
         {
             var todos = await _context.Todos.ToListAsync();
 
@@ -85,7 +93,7 @@ namespace TodoApi.Services.Todos
             return result;
         }
 
-        public async Task<bool> SwapTodos(SwapTodosRequest request)
+        public async Task<bool> SwapTodosAsync(SwapTodosRequest request)
         {
             var todo1 = await _context.Todos.FirstOrDefaultAsync(todo => todo.Id.Equals(request.FirstTodo));
             var todo2 = await _context.Todos.FirstOrDefaultAsync(todo => todo.Id.Equals(request.SecondTodo));
@@ -105,9 +113,9 @@ namespace TodoApi.Services.Todos
             return true;
         }
 
-        public TodoTask? UpdateTodo(Guid id, UpdateTodoRequest request)
+        public async Task<TodoTask?> UpdateTodoAsync(Guid id, UpdateTodoRequest request)
         {
-            var todos = _context.Todos;
+            var todos = await _context.Todos.ToListAsync();
 
             var todo = todos.FirstOrDefault(t => t.Id.Equals(id));
 
@@ -120,7 +128,7 @@ namespace TodoApi.Services.Todos
             todo.Note = request.Note;
             todo.Completed = request.Completed;
 
-            this._context.SaveChanges();
+            await this._context.SaveChangesAsync();
             return todo;
         }
 

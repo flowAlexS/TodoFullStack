@@ -5,16 +5,16 @@ namespace TodoApi.Services.Todos
 {
     public interface ITodoRepository
     {
-        TodoTask? CreateTodo(CreateTodoRequest request);
+        Task<TodoTask?> CreateTodoAsync(CreateTodoRequest request);
 
-        void DeleteTodo(Guid id);
+        Task DeleteTodoAsync(Guid id);
 
-        Task<GetTodoResponse?> GetTodo(Guid id);
+        Task<GetTodoResponse?> GetTodoAsync(Guid id);
 
-        Task<ICollection<GetTodoResponse>> GetTodos();
+        Task<ICollection<GetTodoResponse>> GetTodosAsync();
 
-        TodoTask? UpdateTodo(Guid id, UpdateTodoRequest request);
+        Task<TodoTask?> UpdateTodoAsync(Guid id, UpdateTodoRequest request);
 
-        Task<bool> SwapTodos(SwapTodosRequest request);
+        Task<bool> SwapTodosAsync(SwapTodosRequest request);
     }
 }

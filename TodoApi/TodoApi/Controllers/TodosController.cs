@@ -17,12 +17,12 @@ namespace TodoApi.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetTodos()
-        => Ok(await _todoRepository.GetTodos());
+        => Ok(await _todoRepository.GetTodosAsync());
 
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetTodo([FromRoute] Guid id)
         {
-            var todo = await _todoRepository.GetTodo(id);
+            var todo = await _todoRepository.GetTodoAsync(id);
 
             return todo is null
                 ? NotFound()
@@ -30,9 +30,9 @@ namespace TodoApi.Controllers
         }
 
         [HttpPut("/{id:Guid}")]
-        public IActionResult UpdateTodo([FromRoute] Guid id, [FromBody] UpdateTodoRequest request)
+        public async Task<IActionResult> UpdateTodo([FromRoute] Guid id, [FromBody] UpdateTodoRequest request)
         {
-            var todo = _todoRepository.UpdateTodo(id, request);
+            var todo = await _todoRepository.UpdateTodoAsync(id, request);
 
             return todo is null
                 ? NotFound()
@@ -42,7 +42,7 @@ namespace TodoApi.Controllers
         [HttpPost("/swap")]
         public async Task<IActionResult> SwapTodos([FromBody] SwapTodosRequest request)
         {
-            var result = await _todoRepository.SwapTodos(request);
+            var result = await _todoRepository.SwapTodosAsync(request);
 
             return result
                 ? Ok()
@@ -51,9 +51,9 @@ namespace TodoApi.Controllers
 
         // Both creates look similar.. So I could put them togheter...
         [HttpPost]
-        public IActionResult CreateTodo([FromBody] CreateTodoRequest request)
+        public async Task<IActionResult> CreateTodo([FromBody] CreateTodoRequest request)
         {
-            var task = _todoRepository.CreateTodo(request);
+            var task = await _todoRepository.CreateTodoAsync(request);
 
             if (task is null)
             {
@@ -67,9 +67,9 @@ namespace TodoApi.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        public IActionResult DeleteTodo([FromRoute] Guid id)
+        public async Task<IActionResult> DeleteTodo([FromRoute] Guid id)
         {
-            _todoRepository.DeleteTodo(id);
+            await _todoRepository.DeleteTodoAsync(id);
 
             return NoContent();
         }
