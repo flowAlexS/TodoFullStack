@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using TodoApi.Data;
 using TodoApi.DTOs.Todo;
 using TodoApi.Extensions.Todos;
+using TodoApi.Helpers;
 using TodoApi.Mappers.Todos;
 using TodoApi.Models.Todos;
 
@@ -74,23 +75,46 @@ namespace TodoApi.Services.Todos
             await _context.SaveChangesAsync();
         }
 
-        public async Task<GetTodoResponse?> GetTodoAsync(Guid id)
+        public async Task<GetTodoResponse?> GetTodoAsync(Guid id, TodoQuery query)
         {
             var todos = await _context.Todos.ToListAsync();
             var todo = todos.FirstOrDefault(t => t.Id.Equals(id));
 
-            return todo?.ToGetResponse(todos);
+            if (todo is null)
+            {
+                return null;
+            }
+
+            var todoResponse = todo.ToGetResponse(todos);
+            // Start filtering
+
+            todoResponse = todoResponse.FilterTodoResponseIncludeParent(child =>
+                (string.IsNullOrEmpty(query.Title) || child.Title.ToLower().Contains(query.Title.ToLower())) &&
+                (string.IsNullOrEmpty(query.Note) || child.Note.ToLower().Contains(query.Note.ToLower())) &&
+                (query.Completed is null || child.Completed.Equals(query.Completed)));
+
+            // Make paginations..
+
+            // return only the children that match the filters.
+
+            return todoResponse;
         }
 
-        public async Task<ICollection<GetTodoResponse>> GetTodosAsync()
+        public async Task<ICollection<GetTodoResponse?>> GetTodosAsync(TodoQuery query)
         {
             var todos = await _context.Todos.ToListAsync();
 
             var parents = todos.Where(t => t.ParentTodo is null);
 
-            var result = parents.Select(parent => parent.ToGetResponse(todos)).ToList();
+            // Filter
 
-            return result;
+            return parents.Select(parent => parent.ToGetResponse(todos))
+                 .Select(response => response.FilterResponse(child =>
+                     (string.IsNullOrEmpty(query.Title) || child.Title.ToLower().Contains(query.Title.ToLower())) &&
+                     (string.IsNullOrEmpty(query.Note) || child.Note.ToLower().Contains(query.Note.ToLower())) &&
+                     (query.Completed is null || child.Completed.Equals(query.Completed))))
+                 .Where(response => response is not null)
+                 .ToList();
         }
 
         public async Task<bool> SwapTodosAsync(SwapTodosRequest request)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TodoApi.DTOs.Todo;
+using TodoApi.Helpers;
 using TodoApi.Mappers.Todos;
 using TodoApi.Services.Todos;
 
@@ -16,13 +17,13 @@ namespace TodoApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTodos()
-        => Ok(await _todoRepository.GetTodosAsync());
+        public async Task<IActionResult> GetTodos([FromQuery] TodoQuery query)
+        => Ok(await _todoRepository.GetTodosAsync(query));
 
         [HttpGet("{id:Guid}")]
-        public async Task<IActionResult> GetTodo([FromRoute] Guid id)
+        public async Task<IActionResult> GetTodo([FromRoute] Guid id, [FromQuery] TodoQuery query)
         {
-            var todo = await _todoRepository.GetTodoAsync(id);
+            var todo = await _todoRepository.GetTodoAsync(id, query);
 
             return todo is null
                 ? NotFound()

@@ -41,5 +41,54 @@ namespace TodoApi.Mappers.Todos
             OrderPosition = task.OrderPosition,
             Completed = task.Completed
         };
+
+        public static GetTodoResponse FilterTodoResponseIncludeParent(this GetTodoResponse todoResponse, Func<GetTodoResponse, bool> predicate)
+        => new ()
+        {
+            Id = todoResponse.Id,
+            Title = todoResponse.Title,
+            Note = todoResponse.Note,
+            Completed = todoResponse.Completed,
+            OrderPosition = todoResponse.OrderPosition,
+            Children = todoResponse.Children
+                .Select(child => child.FilterResponse(predicate))
+                .Where(child => child is not null)
+                .Cast<GetTodoResponse>()
+                .ToList(),
+        };
+
+        public static GetTodoResponse? FilterResponse(this GetTodoResponse todoResponse, Func<GetTodoResponse, bool> predicate)
+        {
+            // Check if the current node matches the predicate
+            bool currentNodeMatches = predicate(todoResponse);
+
+            // Check if any child matches the predicate
+            bool anyChildMatches = todoResponse.Children.Any(child => child.FilterResponse(predicate) != null);
+
+            // If the current node or any child matches, include the node in the result
+            if (currentNodeMatches || anyChildMatches)
+            {
+                var filteredResponse = new GetTodoResponse()
+                {
+                    Id = todoResponse.Id,
+                    Title = todoResponse.Title,
+                    Note = todoResponse.Note,
+                    Completed = todoResponse.Completed,
+                    OrderPosition = todoResponse.OrderPosition,
+                };
+
+                // Filter and include children recursively
+                filteredResponse.Children = todoResponse.Children
+                    .Select(child => child.FilterResponse(predicate))
+                    .Where(child => child != null)
+                    .Cast<GetTodoResponse>()
+                    .ToList();
+
+                return filteredResponse;
+            }
+
+            // If neither the current node nor any child matches, return null
+            return null;
+        }
     }
 }

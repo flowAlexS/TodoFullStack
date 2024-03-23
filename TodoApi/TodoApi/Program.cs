@@ -38,5 +38,4 @@ app.Run();
 
 // TODO
 // Handle sorting / filtering...
-// Make everything async..
 // Handle Errors 
