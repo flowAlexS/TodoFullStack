@@ -85,10 +85,10 @@ namespace TodoApi.Services.Todos
             return result;
         }
 
-        public bool SwapTodos(SwapTodosRequest request)
+        public async Task<bool> SwapTodos(SwapTodosRequest request)
         {
-            var todo1 = _context.Todos.FirstOrDefault(todo => todo.Id.Equals(request.FirstTodo));
-            var todo2 = _context.Todos.FirstOrDefault(todo => todo.Id.Equals(request.SecondTodo));
+            var todo1 = await _context.Todos.FirstOrDefaultAsync(todo => todo.Id.Equals(request.FirstTodo));
+            var todo2 = await _context.Todos.FirstOrDefaultAsync(todo => todo.Id.Equals(request.SecondTodo));
 
             if (todo1 is null || todo2 is null)
             {
@@ -101,7 +101,7 @@ namespace TodoApi.Services.Todos
             }
 
             (todo1.OrderPosition, todo2.OrderPosition) = (todo2.OrderPosition, todo1.OrderPosition);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
 

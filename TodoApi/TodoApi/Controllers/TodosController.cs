@@ -40,9 +40,9 @@ namespace TodoApi.Controllers
         }
 
         [HttpPost("/swap")]
-        public IActionResult SwapTodos([FromBody] SwapTodosRequest request)
+        public async Task<IActionResult> SwapTodos([FromBody] SwapTodosRequest request)
         {
-            var result = _todoRepository.SwapTodos(request);
+            var result = await _todoRepository.SwapTodos(request);
 
             return result
                 ? Ok()

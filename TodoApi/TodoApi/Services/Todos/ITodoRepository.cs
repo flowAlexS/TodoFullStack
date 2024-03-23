@@ -15,6 +15,6 @@ namespace TodoApi.Services.Todos
 
         TodoTask? UpdateTodo(Guid id, UpdateTodoRequest request);
 
-        bool SwapTodos(SwapTodosRequest request);
+        Task<bool> SwapTodos(SwapTodosRequest request);
     }
 }
