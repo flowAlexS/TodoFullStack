@@ -27,17 +27,7 @@ namespace TodoApi.Services.Todos
                 Title = request.Title,
                 Note = request.Note,
                 Completed = request.Completed,
-                OrderPosition = parentTodo is null
-                    ? todos
-                    .Where(todo => todo.ParentTodo is null)
-                    .Select(t => t.OrderPosition)
-                    .DefaultIfEmpty(0)
-                    .Max() + 1
-                    : todos
-                    .Where(todo => todo.ParentTodo?.Equals(parentTodo) == true)
-                    .Select(t => t.OrderPosition)
-                    .DefaultIfEmpty(0)
-                    .Max() + 1,
+                OrderPosition = GetOrderPosition(todos, parentTodo),
                 ParentTodo = parentTodo,
                 ParentTodoId = parentTodo?.Id
             };
@@ -148,6 +138,13 @@ namespace TodoApi.Services.Todos
             await this._context.SaveChangesAsync();
             return todo;
         }
+
+        private static int GetOrderPosition(ICollection<TodoTask> todos, TodoTask? parent)
+        => todos
+                .Where(todo => parent is null ? todo.ParentTodo is null : todo.ParentTodo?.Equals(parent) == true)
+                .Select(todo => todo.OrderPosition)
+                .DefaultIfEmpty(0)
+                .Max() + 1;
 
         private void RemoveChildren(TodoTask todo)
         {
