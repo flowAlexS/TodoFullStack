@@ -10,6 +10,6 @@
 
         // Parent reference
 
-        public Guid? ParentId { get; set; }
+        public Guid? ParentId { get; set; } = null;
     }
 }

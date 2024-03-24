@@ -24,7 +24,7 @@ namespace TodoApi.Mappers.Todos
         }
 
         public static CreateTodoResponse ToCreateResponse(this TodoTask task)
-        => new CreateTodoResponse()
+        => new ()
         {
             Id = task.Id,
             Title = task.Title,
@@ -34,7 +34,7 @@ namespace TodoApi.Mappers.Todos
         };
 
         public static UpdateTodoResponse ToUpdateResponse(this TodoTask task)
-        => new UpdateTodoResponse()
+        => new ()
         {
             Id = task.Id,
             Title = task.Title,
@@ -69,21 +69,21 @@ namespace TodoApi.Mappers.Todos
             // If the current node or any child matches, include the node in the result
             if (currentNodeMatches || anyChildMatches)
             {
-                var filteredResponse = new GetTodoResponse()
+                var filteredResponse = new GetTodoResponse
                 {
                     Id = todoResponse.Id,
                     Title = todoResponse.Title,
                     Note = todoResponse.Note,
                     Completed = todoResponse.Completed,
                     OrderPosition = todoResponse.OrderPosition,
-                };
 
-                // Filter and include children recursively
-                filteredResponse.Children = todoResponse.Children
+                    // Filter and include children recursively
+                    Children = todoResponse.Children
                     .Select(child => child.FilterResponse(predicate))
                     .Where(child => child != null)
                     .Cast<GetTodoResponse>()
-                    .ToList();
+                    .ToList()
+                };
 
                 return filteredResponse;
             }

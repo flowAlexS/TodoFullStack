@@ -34,7 +34,3 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
-
-
-// TODO
-// Handle Errors 

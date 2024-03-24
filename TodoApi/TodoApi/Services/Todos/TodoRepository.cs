@@ -16,11 +16,10 @@ namespace TodoApi.Services.Todos
         public TodoRepository(ApplicationDbContext context)
         => _context = context;
             
-        // Change this later for error handling...
-        // Possible errrors ? None
         public async Task<TodoTask?> CreateTodoAsync(CreateTodoRequest request)
         {
             var todos = await _context.Todos.ToListAsync();
+            var parentTodo = todos.FirstOrDefault(todo => todo.Id.Equals(request.ParentId));
 
             var task = new TodoTask()
             {
@@ -28,30 +27,20 @@ namespace TodoApi.Services.Todos
                 Title = request.Title,
                 Note = request.Note,
                 Completed = request.Completed,
-                OrderPosition = todos
+                OrderPosition = parentTodo is null
+                    ? todos
                     .Where(todo => todo.ParentTodo is null)
                     .Select(t => t.OrderPosition)
                     .DefaultIfEmpty(0)
-                    .Max() + 1,
-            };
-
-            if (request.ParentId is not null)
-            {
-                var parent = todos.FirstOrDefault(todo => todo.Id.Equals(request.ParentId));
-
-                if (parent is null)
-                {
-                    return null;
-                }
-                
-                task.ParentTodo = parent;
-                task.ParentTodoId = parent.Id;
-                task.OrderPosition = todos
-                    .Where(todo => todo.ParentTodo?.Equals(parent) == true)
+                    .Max() + 1
+                    : todos
+                    .Where(todo => todo.ParentTodo?.Equals(parentTodo) == true)
                     .Select(t => t.OrderPosition)
                     .DefaultIfEmpty(0)
-                    .Max() + 1;
-            }
+                    .Max() + 1,
+                ParentTodo = parentTodo,
+                ParentTodoId = parentTodo?.Id
+            };
 
             await _context.Todos.AddAsync(task);
             await _context.SaveChangesAsync();
@@ -59,8 +48,6 @@ namespace TodoApi.Services.Todos
             return task;
         }
 
-        // Possible Errors
-        // Todo not existing.
         public async Task DeleteTodoAsync(Guid id)
         {
             var todos = await _context.Todos.ToListAsync();
@@ -77,7 +64,6 @@ namespace TodoApi.Services.Todos
             await _context.SaveChangesAsync();
         }
 
-        // Possible error: NotFound()
         public async Task<GetTodoResponse?> GetTodoAsync(Guid id, TodoQuery query)
         {
             var todos = await _context.Todos.ToListAsync();
@@ -104,7 +90,6 @@ namespace TodoApi.Services.Todos
             return todoResponse;
         }
 
-        // Possible errors none.
         public async Task<ICollection<GetTodoResponse>> GetTodosAsync(TodoQuery query)
         {
             var todos = await _context.Todos.ToListAsync();
@@ -125,9 +110,6 @@ namespace TodoApi.Services.Todos
             return SortTodos(filtered, query);
         }
 
-        // Possible Errors ?
-        // Todos not found
-        // Todos on different levels.
         public async Task<bool> SwapTodosAsync(SwapTodosRequest request)
         {
             var todo1 = await _context.Todos.FirstOrDefaultAsync(todo => todo.Id.Equals(request.FirstTodo));
@@ -148,7 +130,6 @@ namespace TodoApi.Services.Todos
             return true;
         }
 
-        // Possible error ? Todo NotFound
         public async Task<TodoTask?> UpdateTodoAsync(Guid id, UpdateTodoRequest request)
         {
             var todos = await _context.Todos.ToListAsync();
