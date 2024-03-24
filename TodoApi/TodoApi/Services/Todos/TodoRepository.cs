@@ -111,7 +111,7 @@ namespace TodoApi.Services.Todos
             return todoResponse;
         }
 
-        public async Task<ICollection<GetTodoResponse?>> GetTodosAsync(TodoQuery query)
+        public async Task<ICollection<GetTodoResponse>> GetTodosAsync(TodoQuery query)
         {
             var todos = await _context.Todos.ToListAsync();
 
@@ -119,13 +119,27 @@ namespace TodoApi.Services.Todos
 
             // Filter
 
-            return parents.Select(parent => parent.ToGetResponse(todos))
+            var filtered = parents.Select(parent => parent.ToGetResponse(todos))
                  .Select(response => response.FilterResponse(child =>
                      (string.IsNullOrEmpty(query.Title) || child.Title.ToLower().Contains(query.Title.ToLower())) &&
                      (string.IsNullOrEmpty(query.Note) || child.Note.ToLower().Contains(query.Note.ToLower())) &&
                      (query.Completed is null || child.Completed.Equals(query.Completed))))
                  .Where(response => response is not null)
+                 .Select(elem => elem!)
                  .ToList();
+
+            return filtered.SoryBy(x =>
+            {
+                if (query.SortBy.ToLower().Equals("title"))
+                {
+                    return x.Title;
+                }
+
+                return query.SortBy.ToLower().Equals("note")
+                ? x.Note
+                : x.OrderPosition;
+
+            }, query.Descending);
         }
 
         public async Task<bool> SwapTodosAsync(SwapTodosRequest request)

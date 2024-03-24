@@ -12,7 +12,7 @@ namespace TodoApi.Services.Todos
 
         Task<GetTodoResponse?> GetTodoAsync(Guid id, TodoQuery query);
 
-        Task<ICollection<GetTodoResponse?>> GetTodosAsync(TodoQuery query);
+        Task<ICollection<GetTodoResponse>> GetTodosAsync(TodoQuery query);
 
         Task<TodoTask?> UpdateTodoAsync(Guid id, UpdateTodoRequest request);
 

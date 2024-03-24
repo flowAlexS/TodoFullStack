@@ -92,7 +92,10 @@ namespace TodoApi.Mappers.Todos
             return null;
         }
 
-        public static void SortBy(this GetTodoResponse todoResponse, Func<GetTodoResponse, dynamic> keySelector, bool descending)
+        public static void SortBy(
+            this GetTodoResponse todoResponse,
+            Func<GetTodoResponse, dynamic> keySelector,
+            bool descending)
         {
             todoResponse.Children = descending
                 ? todoResponse.Children.OrderByDescending(keySelector).ToList()
@@ -102,6 +105,23 @@ namespace TodoApi.Mappers.Todos
             {
                 child.SortBy(keySelector, descending);
             }
+        }
+
+        public static ICollection<GetTodoResponse> SoryBy(
+            this ICollection<GetTodoResponse> todoResponses,
+            Func<GetTodoResponse, dynamic>keySelector, 
+            bool descending)
+        {
+            var sorted = descending
+                ? todoResponses.OrderByDescending(keySelector)
+                : todoResponses.OrderBy(keySelector);
+
+            foreach (var elem in sorted)
+            {
+                elem.SortBy(keySelector, descending);
+            }
+
+            return sorted.ToList();
         }
     }
 }
