@@ -46,22 +46,6 @@ namespace TodoApi.Controllers
                 : Ok(todo.ToUpdateResponse());
         }
 
-        [HttpPost("/swap")]
-        public async Task<IActionResult> SwapTodos([FromBody] SwapTodosRequest request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var result = await _todoRepository.SwapTodosAsync(request);
-
-            return result
-                ? Ok()
-                : NotFound();
-        }
-
-        // Both creates look similar.. So I could put them togheter...
         [HttpPost]
         public async Task<IActionResult> CreateTodo([FromBody] CreateTodoRequest request)
         {
@@ -81,6 +65,21 @@ namespace TodoApi.Controllers
                 nameof(GetTodo),
                 new { task.Id },
                 task.ToCreateResponse());
+        }
+
+        [HttpPost("/swap")]
+        public async Task<IActionResult> SwapTodos([FromBody] SwapTodosRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _todoRepository.SwapTodosAsync(request);
+
+            return result
+                ? Ok()
+                : NotFound();
         }
 
         [HttpDelete("{id:guid}")]
