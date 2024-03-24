@@ -37,5 +37,4 @@ app.Run();
 
 
 // TODO
-// Handle sorting / filtering...
 // Handle Errors 

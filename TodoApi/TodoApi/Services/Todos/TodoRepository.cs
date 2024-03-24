@@ -17,10 +17,10 @@ namespace TodoApi.Services.Todos
         => _context = context;
             
         // Change this later for error handling...
+        // Possible errrors ? None
         public async Task<TodoTask?> CreateTodoAsync(CreateTodoRequest request)
         {
             var todos = await _context.Todos.ToListAsync();
-            // Also create the order position too..
 
             var task = new TodoTask()
             {
@@ -59,6 +59,8 @@ namespace TodoApi.Services.Todos
             return task;
         }
 
+        // Possible Errors
+        // Todo not existing.
         public async Task DeleteTodoAsync(Guid id)
         {
             var todos = await _context.Todos.ToListAsync();
@@ -75,6 +77,7 @@ namespace TodoApi.Services.Todos
             await _context.SaveChangesAsync();
         }
 
+        // Possible error: NotFound()
         public async Task<GetTodoResponse?> GetTodoAsync(Guid id, TodoQuery query)
         {
             var todos = await _context.Todos.ToListAsync();
@@ -94,23 +97,14 @@ namespace TodoApi.Services.Todos
                 (query.Completed is null || child.Completed.Equals(query.Completed)));
 
             // Sort
-            todoResponse.SortBy(x =>
-            {
-                if (query.SortBy.ToLower().Equals("title"))
-                {
-                    return x.Title;
-                }
-
-                return query.SortBy.ToLower().Equals("note")
-                ? x.Note
-                : x.OrderPosition;
-            }, query.Descending);
+            SortTodos(new List<GetTodoResponse>() { todoResponse }, query);
 
             // return only the children that match the filters.
 
             return todoResponse;
         }
 
+        // Possible errors none.
         public async Task<ICollection<GetTodoResponse>> GetTodosAsync(TodoQuery query)
         {
             var todos = await _context.Todos.ToListAsync();
@@ -128,20 +122,12 @@ namespace TodoApi.Services.Todos
                  .Select(elem => elem!)
                  .ToList();
 
-            return filtered.SoryBy(x =>
-            {
-                if (query.SortBy.ToLower().Equals("title"))
-                {
-                    return x.Title;
-                }
-
-                return query.SortBy.ToLower().Equals("note")
-                ? x.Note
-                : x.OrderPosition;
-
-            }, query.Descending);
+            return SortTodos(filtered, query);
         }
 
+        // Possible Errors ?
+        // Todos not found
+        // Todos on different levels.
         public async Task<bool> SwapTodosAsync(SwapTodosRequest request)
         {
             var todo1 = await _context.Todos.FirstOrDefaultAsync(todo => todo.Id.Equals(request.FirstTodo));
@@ -162,6 +148,7 @@ namespace TodoApi.Services.Todos
             return true;
         }
 
+        // Possible error ? Todo NotFound
         public async Task<TodoTask?> UpdateTodoAsync(Guid id, UpdateTodoRequest request)
         {
             var todos = await _context.Todos.ToListAsync();
@@ -192,5 +179,16 @@ namespace TodoApi.Services.Todos
                 _context.Todos.Remove(child);
             }
         }
+
+        private static ICollection<GetTodoResponse> SortTodos(List<GetTodoResponse> responses, TodoQuery query)
+        => responses.SortBy(x =>
+            {
+                return query.SortBy.ToLower() switch
+                {
+                    "title" => x.Title,
+                    "note" => x.Note,
+                    _ => x.OrderPosition,
+                };
+            }, query.Descending);
     }
 }

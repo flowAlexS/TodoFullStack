@@ -107,7 +107,7 @@ namespace TodoApi.Mappers.Todos
             }
         }
 
-        public static ICollection<GetTodoResponse> SoryBy(
+        public static ICollection<GetTodoResponse> SortBy(
             this ICollection<GetTodoResponse> todoResponses,
             Func<GetTodoResponse, dynamic>keySelector, 
             bool descending)
