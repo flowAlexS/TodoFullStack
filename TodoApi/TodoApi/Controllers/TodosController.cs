@@ -22,6 +22,7 @@ namespace TodoApi.Controllers
 
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetTodo([FromRoute] Guid id, [FromQuery] TodoQuery query)
+        
         {
             var todo = await _todoRepository.GetTodoAsync(id, query);
 
@@ -33,6 +34,11 @@ namespace TodoApi.Controllers
         [HttpPut("/{id:Guid}")]
         public async Task<IActionResult> UpdateTodo([FromRoute] Guid id, [FromBody] UpdateTodoRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var todo = await _todoRepository.UpdateTodoAsync(id, request);
 
             return todo is null
@@ -43,6 +49,11 @@ namespace TodoApi.Controllers
         [HttpPost("/swap")]
         public async Task<IActionResult> SwapTodos([FromBody] SwapTodosRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var result = await _todoRepository.SwapTodosAsync(request);
 
             return result
@@ -54,6 +65,11 @@ namespace TodoApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTodo([FromBody] CreateTodoRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var task = await _todoRepository.CreateTodoAsync(request);
 
             if (task is null)
