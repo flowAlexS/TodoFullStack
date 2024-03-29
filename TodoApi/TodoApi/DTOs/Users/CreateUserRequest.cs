@@ -12,6 +12,6 @@
 
         public string LastName { get; set; } = string.Empty;
 
-        public FormFile? ProfilePicture { get; set; }
+        public IFormFile? ProfilePicture { get; set; }
     }
 }

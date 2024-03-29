@@ -1,9 +1,9 @@
-﻿using TodoApi.DTOs;
+﻿using TodoApi.DTOs.Users;
 
 namespace TodoApi.Services.Users
 {
     public interface IAccountService
     {
-        bool CreateAccount(CreateUserRequest request); // Need a create account dto...
+        Task<string?> CreateAccount(CreateUserRequest request); // Need a create account dto...
     }
 }
