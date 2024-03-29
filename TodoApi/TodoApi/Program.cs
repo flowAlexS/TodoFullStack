@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Minio;
 using TodoApi.Data;
 using TodoApi.Models.Users;
 using TodoApi.Services.Todos;
@@ -24,6 +25,11 @@ var builder = WebApplication.CreateBuilder(args);
         options.Password.RequireNonAlphanumeric = true;
         options.Password.RequiredLength = 6;
     }).AddEntityFrameworkStores<ApplicationDbContext>();
+
+    builder.Services.AddMinio(configureClient => configureClient
+    .WithEndpoint("http://127.0.0.1:9000")
+    .WithCredentials("minioadmin", "minioadmin")
+    .WithSSL(false));
 }
 
 var app = builder.Build();
