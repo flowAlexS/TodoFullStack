@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using TodoApi.DTOs.Users;
+using TodoApi.Mappers.Users;
 using TodoApi.Models.Users;
 using TodoApi.Services.MinioService;
 
@@ -16,7 +17,7 @@ namespace TodoApi.Services.Users
             this._minioService = minioService;
         }
 
-        public async Task<string?> CreateAccount(CreateUserRequest request)
+        public async Task<CreateUserResponse?> CreateAccount(CreateUserRequest request)
         {
             if (await _userManager.FindByEmailAsync(request.Email) != null ||
                 await _userManager.FindByNameAsync(request.UserName) != null)
@@ -34,8 +35,14 @@ namespace TodoApi.Services.Users
                 TwoFactorEnabled = true
             };
 
-            await this._userManager.CreateAsync(user, request.Passsword);
-            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var response = await this._userManager.CreateAsync(user, request.Passsword);
+
+            if (response.Succeeded)
+            {
+                return user.ToCreateUserResponse(await _userManager.GenerateEmailConfirmationTokenAsync(user));
+            }
+
+            return null;
         }
     }
 }

@@ -13,16 +13,10 @@ namespace TodoApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly IMinioService _minioService;
-        private readonly IMinioClient _minioClient;
 
-        public UsersController(IAccountService accountService, UserManager<AppUser> userManager, IMinioService minioService, IMinioClient minioClient)
+        public UsersController(IAccountService accountService)
         {
             _accountService = accountService;
-            _userManager = userManager;
-            _minioService = minioService;
-            _minioClient = minioClient;
         }
 
         // Create an account...
