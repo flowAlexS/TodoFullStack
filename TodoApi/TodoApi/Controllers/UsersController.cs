@@ -82,6 +82,12 @@ namespace TodoApi.Controllers
                 : Ok(response);
         }
 
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequest request)
+        {
+            return Ok();
+        }
+
         // Will require authorization...
         [HttpDelete("/delete/{email}")]
         public async Task<IActionResult> DeleteUser([FromRoute] string email)

@@ -121,5 +121,35 @@ namespace TodoApi.Services.Users
                 }
                 : null;
         }
+
+        public async Task UpdateUser(UpdateUserRequest request)
+        {
+            if (request.UserName is null && request.Email is null)
+            {
+                return;
+            }
+
+            var user = request.Email is null
+                ? await this._userManager.FindByNameAsync(request.UserName!)
+                : await this._userManager.FindByEmailAsync(request.Email);
+
+            if (user is null)
+            {
+                return;
+            }
+
+            user.FirstName = request.FirstName is null ? user.FirstName : request.FirstName;
+            user.LastName = request.LastName is null ? user.LastName : request.LastName;
+
+            if (request.CurrentPassword is not null &&
+                request.NewPassword is not null)
+            {
+                await this._userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+            }
+
+            user.ProfilePictureName = request.ProfilePicture is null ? user.ProfilePictureName : await _minioService.UploadFile(request.ProfilePicture);
+
+            return;
+        }
     }
 }

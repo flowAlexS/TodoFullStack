@@ -13,5 +13,7 @@ namespace TodoApi.Services.Users
         Task<ForgotPasswordResponse?> GetForgotPasswordToken(ForgotPasswordRequest request);
 
         Task<ResetPasswordResponse?> ResetPassword(ResetPasswordRequest request);
+
+        Task UpdateUser(UpdateUserRequest request);
     }
 }
