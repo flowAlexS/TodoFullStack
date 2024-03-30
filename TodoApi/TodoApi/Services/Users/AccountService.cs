@@ -67,7 +67,7 @@ namespace TodoApi.Services.Users
             }
 
             var user = request.Email is null
-                ? await this._userManager.FindByNameAsync(request.UserName)
+                ? await this._userManager.FindByNameAsync(request.UserName!)
                 : await this._userManager.FindByEmailAsync(request.Email);
 
             if (user is null)
@@ -83,6 +83,33 @@ namespace TodoApi.Services.Users
                 UserName = user.UserName ?? string.Empty,
                 ResetPasswordToken = response,
             };
+        }
+
+        public async Task<ResetPasswordResponse?> ResetPassword(ResetPasswordRequest request)
+        {
+            if (request.Email is null && request.UserName is null)
+            {
+                return null;
+            }
+
+            var user = request.Email is null
+                ? await this._userManager.FindByNameAsync(request.UserName!)
+                : await this._userManager.FindByEmailAsync(request.Email);
+
+            if (user is null)
+            {
+                return null;
+            }
+
+            var response = await this._userManager.ResetPasswordAsync(user, request.ResetPasswordToken, request.NewPassword);
+
+            return response.Succeeded
+                ? new ResetPasswordResponse()
+                {
+                    Email = user.Email ?? string.Empty,
+                    UserName = user.UserName ?? string.Empty
+                }
+                : null;
         }
     }
 }

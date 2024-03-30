@@ -9,5 +9,7 @@ namespace TodoApi.Services.Users
         Task<bool> ConfirmEmail(ConfirmEmailRequest request);
 
         Task<ForgotPasswordResponse?> GetForgotPasswordToken(ForgotPasswordRequest request);
+
+        Task<ResetPasswordResponse?> ResetPassword(ResetPasswordRequest request);
     }
 }

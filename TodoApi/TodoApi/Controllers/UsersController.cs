@@ -67,7 +67,20 @@ namespace TodoApi.Controllers
             return Ok(response);
         }
 
+        [HttpPost("/resetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var response = await this._accountService.ResetPassword(request);
+
+            return response is null
+                ? BadRequest()
+                : Ok(response);
+        }
 
         // Put Delete (Update/Delete Account) -> Authorisation required...
     }
