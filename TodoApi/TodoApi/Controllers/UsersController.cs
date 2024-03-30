@@ -38,6 +38,21 @@ namespace TodoApi.Controllers
         }
 
 
+        [HttpPost("/forgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var response = await this._accountService.GetForgotPasswordToken(request);
+
+            return response is null
+                ? BadRequest()
+                : Ok(response);
+        }
+
         // Work on errors later..
         [HttpPost("/register")]
         public async Task<IActionResult> Register([FromForm] CreateUserRequest request)
@@ -51,5 +66,9 @@ namespace TodoApi.Controllers
 
             return Ok(response);
         }
+
+
+
+        // Put Delete (Update/Delete Account) -> Authorisation required...
     }
 }

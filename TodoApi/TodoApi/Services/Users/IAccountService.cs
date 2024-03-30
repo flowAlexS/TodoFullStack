@@ -7,5 +7,7 @@ namespace TodoApi.Services.Users
         Task<CreateUserResponse?> CreateAccount(CreateUserRequest request);
 
         Task<bool> ConfirmEmail(ConfirmEmailRequest request);
+
+        Task<ForgotPasswordResponse?> GetForgotPasswordToken(ForgotPasswordRequest request);
     }
 }

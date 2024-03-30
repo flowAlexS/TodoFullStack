@@ -58,5 +58,31 @@ namespace TodoApi.Services.Users
 
             return null;
         }
+
+        public async Task<ForgotPasswordResponse?> GetForgotPasswordToken(ForgotPasswordRequest request)
+        {
+            if (request.Email is null && request.UserName is null)
+            {
+                return null;
+            }
+
+            var user = request.Email is null
+                ? await this._userManager.FindByNameAsync(request.UserName)
+                : await this._userManager.FindByEmailAsync(request.Email);
+
+            if (user is null)
+            {
+                return null;
+            }
+
+            var response = await this._userManager.GeneratePasswordResetTokenAsync(user);
+
+            return new ForgotPasswordResponse()
+            {
+                Email = user.Email ?? string.Empty,
+                UserName = user.UserName ?? string.Empty,
+                ResetPasswordToken = response,
+            };
+        }
     }
 }
