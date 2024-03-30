@@ -19,13 +19,26 @@ namespace TodoApi.Controllers
             _accountService = accountService;
         }
 
-        // Create an account...
+        [HttpPost("/confirm")]
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        // Steps check the email and username
+            var response = await this._accountService.ConfirmEmail(request);
 
-        // Send conf email...
+            if (response)
+            {
+                return Ok(); // We might need to implement smth else here
+            }
 
-        // All good then create user.. 
+            return BadRequest(response); // We might want to return the error here...
+        }
+
+
+        // Work on errors later..
         [HttpPost("/register")]
         public async Task<IActionResult> Register([FromForm] CreateUserRequest request)
         {

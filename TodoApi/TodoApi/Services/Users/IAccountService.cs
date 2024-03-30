@@ -4,6 +4,8 @@ namespace TodoApi.Services.Users
 {
     public interface IAccountService
     {
-        Task<CreateUserResponse?> CreateAccount(CreateUserRequest request); // Need a create account dto...
+        Task<CreateUserResponse?> CreateAccount(CreateUserRequest request);
+
+        Task<bool> ConfirmEmail(ConfirmEmailRequest request);
     }
 }

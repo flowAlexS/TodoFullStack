@@ -17,6 +17,20 @@ namespace TodoApi.Services.Users
             this._minioService = minioService;
         }
 
+        public async Task<bool> ConfirmEmail(ConfirmEmailRequest request)
+        {
+            var user = await this._userManager.FindByEmailAsync(request.Email);
+
+            if (user is null)
+            {
+                return false;
+            }
+
+            var response = await this._userManager.ConfirmEmailAsync(user, request.ConfirmationToken);
+
+            return response.Succeeded;
+        }
+
         public async Task<CreateUserResponse?> CreateAccount(CreateUserRequest request)
         {
             if (await _userManager.FindByEmailAsync(request.Email) != null ||
