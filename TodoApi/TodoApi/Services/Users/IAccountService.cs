@@ -8,6 +8,8 @@ namespace TodoApi.Services.Users
 
         Task<bool> ConfirmEmail(ConfirmEmailRequest request);
 
+        Task DeleteUser(string email);
+
         Task<ForgotPasswordResponse?> GetForgotPasswordToken(ForgotPasswordRequest request);
 
         Task<ResetPasswordResponse?> ResetPassword(ResetPasswordRequest request);

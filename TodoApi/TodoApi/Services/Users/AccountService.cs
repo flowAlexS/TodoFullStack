@@ -59,6 +59,16 @@ namespace TodoApi.Services.Users
             return null;
         }
 
+        public async Task DeleteUser(string email)
+        {
+            var user = await this._userManager.FindByEmailAsync(email);
+
+            if (user is not null)
+            {
+                await this._userManager.DeleteAsync(user);
+            }
+        }
+
         public async Task<ForgotPasswordResponse?> GetForgotPasswordToken(ForgotPasswordRequest request)
         {
             if (request.Email is null && request.UserName is null)

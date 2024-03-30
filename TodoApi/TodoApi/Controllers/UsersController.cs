@@ -82,6 +82,14 @@ namespace TodoApi.Controllers
                 : Ok(response);
         }
 
+        // Will require authorization...
+        [HttpDelete("/delete/{email}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] string email)
+        {
+            await this._accountService.DeleteUser(email);
+            return NoContent();
+        }
+
         // Put Delete (Update/Delete Account) -> Authorisation required...
     }
 }
